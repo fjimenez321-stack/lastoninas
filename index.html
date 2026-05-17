@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐙 ¡AquaJuegos! El Portal del Océano 🐬</title>
+  <style>
+    /* Estilos Globales con toque Infantil y Marino */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      background: linear-gradient(180deg, #4da6ff 0%, #0066cc 30%, #003366 100%);
+      min-height: 100vh;
+      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Arial', sans-serif;
+      color: #ffffff;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Decoración de Burbujas de Fondo */
+    .burbujas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .burbuja {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      bottom: -50px;
+      animation: flotar 8s infinite linear;
+    }
+    @keyframes flotar {
+      0% { transform: translateY(0) scale(1); opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.6; }
+      100% { transform: translateY(-105vh) scale(1.2); opacity: 0; }
+    }
+
+    /* Encabezado Alegre */
+    header {
+      text-align: center;
+      padding: 30px 15px;
+      position: relative;
+      z-index: 10;
+      text-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    }
+    h1 {
+      font-size: 3rem;
+      color: #fff200;
+      -webkit-text-stroke: 2px #d35400;
+      margin-bottom: 10px;
+      animation: pulso 2s infinite alternate;
+    }
+    @keyframes pulso {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.04); }
+    }
+    .subtitulo {
+      font-size: 1.3rem;
+      background: rgba(0, 0, 0, 0.2);
+      display: inline-block;
+      padding: 6px 20px;
+      border-radius: 20px;
+      border: 2px dashed #ffe94d;
+    }
+
+    /* Contenedor Principal de Misiones/Juegos */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 50px;
+    }
+
+    /* Tarjetas de Zona de Juego */
+    .juego-seccion {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      border: 4px solid #00ccff;
+      border-radius: 30px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .juego-seccion:nth-child(even) {
+      border-color: #00ffcc;
+    }
+    .juego-titulo {
+      font-size: 1.8rem;
+      color: #ffffff;
+      margin-bottom: 15px;
+      text-align: center;
+      background: #e67e22;
+      padding: 8px 25px;
+      border-radius: 25px;
+      box-shadow: 0 4px 0 #d35400;
+    }
+    .juego-seccion:nth-child(even) .juego-titulo {
+      background: #2ecc71;
+      box-shadow: 0 4px 0 #27ae60;
+    }
+
+    /* Estructura Adaptable para los Iframes */
+    .iframe-contenedor {
+      position: relative;
+      width: 100%;
+      max-width: 480px; /* Alineado al ancho máximo original de tus juegos */
+      aspect-ratio: 4 / 5;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+      border: 6px solid #fff;
+      background: #1a1a2e;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Decoraciones de Flora y Fauna en los bordes */
+    .decoracion {
+      font-size: 2.5rem;
+      margin: 10px;
+      user-select: none;
+    }
+
+    /* Pie de página estilo lecho marino */
+    footer {
+      text-align: center;
+      padding: 40px 15px;
+      background: #34495e;
+      border-top: 8px solid #f1c40f; /* Simula la arena de la playa/fondo */
+      margin-top: 50px;
+      position: relative;
+      z-index: 10;
+      font-size: 1.1rem;
+      color: #f7f9f9;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="burbujas" id="contenedor-burbujas"></div>
+
+  <header>
+    <h1>🌊 ¡AquaJuegos! 🐙</h1>
+    <p class="subtitulo">¡Explora, juega y diviértete bajo el mar! 🐠 🦀</p>
+  </header>
+
+  <main>
+    <section class="juego-seccion">
+      <h2 class="juego-titulo">🐬 Misión 1: Memorice Marino</h2>
+      <div class="decoracion">🐡 🌿 🐳 🌿 🦑</div>
+      <div class="iframe-contenedor">
+        <iframe src="juego_toninas.html" title="Memorice Marino"></iframe>
+      </div>
+    </section>
+
+    <section class="juego-seccion">
+      <h2 class="juego-titulo">🚀 Misión 2: Rompecabezas del Espacio y Más</h2>
+      <div class="decoracion">🐢 🪸 🦈 🪸 🦀</div>
+      <div class="iframe-contenedor">
+        <iframe src="juego_memoria.html" title="Juego de Memoria"></iframe>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Hecho con mucho 💙 para los pequeños exploradores del océano 🌴 🐚</p>
+  </footer>
+
+  <script>
+    // Generador dinámico de burbujas divertidas
+    function crearBurbujas() {
+      const contenedor = document.getElementById('contenedor-burbujas');
+      const cantidad = 15;
+      
+      for (let i = 0; i < cantidad; i++) {
+        const burbuja = document.createElement('div');
+        burbuja.className = 'burbuja';
+        
+        // Tamaños y posiciones aleatorias para mayor dinamismo
+        const tamano = Math.random() * 35 + 10;
+        burbuja.style.width = `${tamano}px`;
+        burbuja.style.height = `${tamano}px`;
+        burbuja.style.left = `${Math.random() * 100}%`;
+        
+        // Retrasos y duraciones de animación variadas
+        burbuja.style.animationDuration = `${Math.random() * 6 + 5}s`;
+        burbuja.style.animationDelay = `${Math.random() * 5}s`;
+        
+        contenedor.appendChild(burbuja);
+      }
+    }
+    window.onload = crearBurbujas;
+  </script>
+</body>
+</html>
