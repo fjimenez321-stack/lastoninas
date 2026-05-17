@@ -66,43 +66,106 @@
       100% { transform: scale(1.04); }
     }
     .subtitulo {
-      font-size: 1.3rem;
-      background: rgba(0, 0, 0, 0.2);
+      font-size: 1.2rem;
+      background: rgba(0, 0, 0, 0.25);
       display: inline-block;
       padding: 6px 20px;
       border-radius: 20px;
       border: 2px dashed #ffe94d;
     }
 
-    /* Contenedor Principal de Misiones/Juegos */
+    /* MAPA INTERACTIVO DE SELECCIÓN DE MISIONES */
+    .mapa-misiones {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 15px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      position: relative;
+      z-index: 10;
+    }
+    .mision-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      border: 4px solid #fff;
+      border-radius: 24px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+    .mision-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+    }
+    .mision-num {
+      background: #e67e22;
+      color: #fff;
+      display: inline-block;
+      padding: 4px 15px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+    .mision-ico {
+      font-size: 3.5rem;
+      margin: 10px 0;
+      animation: rebotar-icono 3s infinite ease-in-out;
+    }
+    @keyframes rebotar-icono {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .mision-card h3 {
+      font-size: 1.3rem;
+      color: #ffd700;
+      margin-bottom: 6px;
+    }
+    .mision-card p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    /* CONTENEDOR PRINCIPAL DEL JUEGO SELECCIONADO */
     main {
       max-width: 1100px;
-      margin: 0 auto;
-      padding: 20px;
+      margin: 20px auto;
+      padding: 10px;
       position: relative;
       z-index: 10;
       display: flex;
       flex-direction: column;
-      gap: 50px;
-    }
-
-    /* Tarjetas de Zona de Juego */
-    .juego-seccion {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(5px);
-      border: 4px solid #00ccff;
-      border-radius: 30px;
-      padding: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      display: flex;
-      flex-direction: column;
       align-items: center;
     }
-    .juego-seccion:nth-child(even) {
-      border-color: #00ffcc;
+
+    .juego-pantalla {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      border: 6px solid #00ccff;
+      border-radius: 30px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 600px;
+      animation: aparecer 0.4s ease-out;
     }
+    .juego-pantalla.active {
+      display: flex;
+    }
+    @keyframes aparecer {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
     .juego-titulo {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       color: #ffffff;
       margin-bottom: 15px;
       text-align: center;
@@ -111,17 +174,12 @@
       border-radius: 25px;
       box-shadow: 0 4px 0 #d35400;
     }
-    .juego-seccion:nth-child(even) .juego-titulo {
-      background: #2ecc71;
-      box-shadow: 0 4px 0 #27ae60;
-    }
 
     /* Estructura Adaptable para los Iframes */
     .iframe-contenedor {
       position: relative;
       width: 100%;
-      max-width: 480px; /* Alineado al ancho máximo original de tus juegos */
-      aspect-ratio: 4 / 5;
+      aspect-ratio: 4 / 5.2;
       border-radius: 20px;
       overflow: hidden;
       box-shadow: 0 8px 16px rgba(0,0,0,0.5);
@@ -134,11 +192,29 @@
       border: none;
     }
 
-    /* Decoraciones de Flora y Fauna en los bordes */
     .decoracion {
-      font-size: 2.5rem;
-      margin: 10px;
+      font-size: 2.2rem;
+      margin: 8px;
       user-select: none;
+    }
+
+    /* BOTÓN CERRAR JUEGO */
+    .btn-cerrar {
+      background: #ff4a4a;
+      border: none;
+      color: white;
+      padding: 8px 20px;
+      font-weight: bold;
+      border-radius: 15px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #c0392b;
+      margin-top: 15px;
+      font-size: 1rem;
+      transition: transform 0.1s;
+    }
+    .btn-cerrar:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #c0392b;
     }
 
     /* Pie de página estilo lecho marino */
@@ -157,6 +233,7 @@
 </head>
 <body>
 
+  <!-- Animación de burbujas en el fondo -->
   <div class="burbujas" id="contenedor-burbujas"></div>
 
   <header>
@@ -164,21 +241,63 @@
     <p class="subtitulo">¡Explora, juega y diviértete bajo el mar! 🐠 🦀</p>
   </header>
 
+  <!-- MAPA DE SELECCIÓN -->
+  <div class="mapa-misiones" id="mapa-misiones">
+    <!-- Misión 1 -->
+    <div class="mision-card" onclick="abrirJuego('juego1')">
+      <span class="mision-num">Misión 1</span>
+      <div class="mision-ico">🐬</div>
+      <h3>Memorice Marino</h3>
+      <p>Encuentra las parejas de delfines y vecinos acuáticos.</p>
+    </div>
+
+    <!-- Misión 2 -->
+    <div class="mision-card" onclick="abrirJuego('juego2')">
+      <span class="mision-num">Misión 2</span>
+      <div class="mision-ico">🚀</div>
+      <h3>Rompecabezas Multitema</h3>
+      <p>¡Elige entre el espacio, animales, ciencias o ricas frutas!</p>
+    </div>
+
+    <!-- Misión 3 -->
+    <div class="mision-card" onclick="abrirJuego('juego3')">
+      <span class="mision-num">Misión 3</span>
+      <div class="mision-ico">🦐</div>
+      <h3>El Laberinto de la Tonina</h3>
+      <p>¡Ayuda a la tonina negra a comer camarones sin que la asusten!</p>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR DE JUEGOS ACTIVOS -->
   <main>
-    <section class="juego-seccion">
+    <!-- SECCIÓN JUEGO 1 -->
+    <section class="juego-pantalla" id="juego1">
       <h2 class="juego-titulo">🐬 Misión 1: Memorice Marino</h2>
       <div class="decoracion">🐡 🌿 🐳 🌿 🦑</div>
       <div class="iframe-contenedor">
         <iframe src="juego_toninas.html" title="Memorice Marino"></iframe>
       </div>
+      <button class="btn-cerrar" onclick="cerrarJuego()">◀ Volver al Mapa</button>
     </section>
 
-    <section class="juego-seccion">
-      <h2 class="juego-titulo">🚀 Misión 2: Rompecabezas del Espacio y Más</h2>
-      <div class="decoracion">🐢 🪸 🦈 🪸 🦀</div>
+    <!-- SECCIÓN JUEGO 2 -->
+    <section class="juego-pantalla" id="juego2">
+      <h2 class="juego-titulo">🚀 Misión 2: Rompecabezas Multitema</h2>
+      <div class="decoracion">🚀 🪐 🔬 🧬 🍎</div>
       <div class="iframe-contenedor">
         <iframe src="juego_memoria.html" title="Juego de Memoria"></iframe>
       </div>
+      <button class="btn-cerrar" onclick="cerrarJuego()">◀ Volver al Mapa</button>
+    </section>
+
+    <!-- SECCIÓN JUEGO 3 -->
+    <section class="juego-pantalla" id="juego3">
+      <h2 class="juego-titulo">🖤 Misión 3: El Laberinto de la Tonina</h2>
+      <div class="decoracion">🐢 🪸 🦈 🪸 🚢</div>
+      <div class="iframe-contenedor">
+        <iframe src="juego_laberinto.html" title="Laberinto de la Tonina Negra"></iframe>
+      </div>
+      <button class="btn-cerrar" onclick="cerrarJuego()">◀ Volver al Mapa</button>
     </section>
   </main>
 
@@ -187,6 +306,32 @@
   </footer>
 
   <script>
+    // Sistema para abrir y cerrar misiones
+    function abrirJuego(id) {
+      // Ocultar mapa
+      document.getElementById('mapa-misiones').style.display = 'none';
+      // Desactivar todos los marcos
+      document.querySelectorAll('.juego-pantalla').forEach(pantalla => {
+        pantalla.classList.remove('active');
+      });
+      // Activar pantalla seleccionada
+      document.getElementById(id).classList.add('active');
+      // Scroll automático al tope del juego para fácil visualización
+      window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    function cerrarJuego() {
+      // Ocultar todos los marcos
+      document.querySelectorAll('.juego-pantalla').forEach(pantalla => {
+        pantalla.classList.remove('active');
+        // Recargar los iframes para que se reinicie el juego cuando salgan de él
+        const iframe = pantalla.querySelector('iframe');
+        if (iframe) iframe.src = iframe.src;
+      });
+      // Volver a mostrar mapa
+      document.getElementById('mapa-misiones').style.display = 'grid';
+    }
+
     // Generador dinámico de burbujas divertidas
     function crearBurbujas() {
       const contenedor = document.getElementById('contenedor-burbujas');
@@ -196,13 +341,11 @@
         const burbuja = document.createElement('div');
         burbuja.className = 'burbuja';
         
-        // Tamaños y posiciones aleatorias para mayor dinamismo
         const tamano = Math.random() * 35 + 10;
         burbuja.style.width = `${tamano}px`;
         burbuja.style.height = `${tamano}px`;
         burbuja.style.left = `${Math.random() * 100}%`;
         
-        // Retrasos y duraciones de animación variadas
         burbuja.style.animationDuration = `${Math.random() * 6 + 5}s`;
         burbuja.style.animationDelay = `${Math.random() * 5}s`;
         
