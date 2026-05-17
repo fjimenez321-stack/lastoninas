@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐙 ¡AquaJuegos! El Portal del Océano 🐬</title>
+  <style>
+    /* Estilos Globales con toque Infantil y Marino */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      background: linear-gradient(180deg, #4da6ff 0%, #0066cc 30%, #003366 100%);
+      min-height: 100vh;
+      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Arial', sans-serif;
+      color: #ffffff;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Decoración de Burbujas de Fondo */
+    .burbujas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .burbuja {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      bottom: -50px;
+      animation: flotar 8s infinite linear;
+    }
+    @keyframes flotar {
+      0% { transform: translateY(0) scale(1); opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.6; }
+      100% { transform: translateY(-105vh) scale(1.2); opacity: 0; }
+    }
+
+    /* Encabezado Alegre */
+    header {
+      text-align: center;
+      padding: 30px 15px;
+      position: relative;
+      z-index: 10;
+      text-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    }
+    h1 {
+      font-size: 3rem;
+      color: #fff200;
+      -webkit-text-stroke: 2px #d35400;
+      margin-bottom: 10px;
+      animation: pulso 2s infinite alternate;
+    }
+    @keyframes pulso {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.04); }
+    }
+    .subtitulo {
+      font-size: 1.2rem;
+      background: rgba(0, 0, 0, 0.25);
+      display: inline-block;
+      padding: 6px 20px;
+      border-radius: 20px;
+      border: 2px dashed #ffe94d;
+    }
+
+    /* MAPA INTERACTIVO DE SELECCIÓN DE MISIONES */
+    .mapa-misiones {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 15px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      position: relative;
+      z-index: 10;
+    }
+    .mision-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      border: 4px solid #fff;
+      border-radius: 24px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+    .mision-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+    }
+    .mision-num {
+      background: #e67e22;
+      color: #fff;
+      display: inline-block;
+      padding: 4px 15px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+    .mision-ico {
+      font-size: 3.5rem;
+      margin: 10px 0;
+      animation: rebotar-icono 3s infinite ease-in-out;
+    }
+    @keyframes rebotar-icono {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .mision-card h3 {
+      font-size: 1.3rem;
+      color: #ffd700;
+      margin-bottom: 6px;
+    }
+    .mision-card p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    /* CONTENEDOR PRINCIPAL DEL JUEGO SELECCIONADO */
+    main {
+      max-width: 1100px;
+      margin: 20px auto;
+      padding: 10px;
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .juego-pantalla {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      border: 6px solid #00ccff;
+      border-radius: 30px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 600px;
+      animation: aparecer 0.4s ease-out;
+    }
+    .juego-pantalla.active {
+      display: flex;
+    }
+    @keyframes aparecer {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .juego-titulo {
+      font-size: 1.6rem;
+      color: #ffffff;
+      margin-bottom: 15px;
+      text-align: center;
+      background: #e67e22;
+      padding: 8px 25px;
+      border-radius: 25px;
+      box-shadow: 0 4px 0 #d35400;
+    }
+
+    /* Estructura Adaptable para los Iframes */
+    .iframe-contenedor {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 5.2;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+      border: 6px solid #fff;
+      background: #1a1a2e;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .decoracion {
+      font-size: 2.2rem;
+      margin: 8px;
+      user-select: none;
+    }
+
+    /* BOTÓN CERRAR JUEGO */
+    .btn-cerrar {
+      background: #ff4a4a;
+      border: none;
+      color: white;
+      padding: 8px 20px;
+      font-weight: bold;
+      border-radius: 15px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #c0392b;
+      margin-top: 15px;
+      font-size: 1rem;
+      transition: transform 0.1s;
+    }
+    .btn-cerrar:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #c0392b;
+    }
+
+    /* Pie de página estilo lecho marino */
+    footer {
+      text-align: center;
+      padding: 40px 15px;
+      background: #34495e;
+      border-top: 8px solid #f1c40f; /* Simula la arena de la playa/fondo */
+      margin-top: 50px;
+      position: relative;
+      z-index: 10;
+      font-size: 1.1rem;
+      color: #f7f9f9;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Animación de burbujas en el fondo -->
+  <div class="burbujas" id="contenedor-burbujas"></div>
+
+  <header>
+    <h1>🌊 ¡AquaJuegos! 🐙</h1>
+    <p class="subtitulo">¡Explora, juega y diviértete bajo el mar! 🐠 🦀</p>
+  </header>
+
+  <!-- MAPA DE SELECCIÓN -->
+  <div class="mapa-misiones" id="mapa-misiones">
+    <!-- Misión 1 -->
+    <div class="mision-card" onclick="abrirJuego('juego1')">
+      <span class="mision-num">Misión 1</span>
+      <div class="mision-ico">🐬</div>
+      <h3>Memorice Marino</h3>
+      <p>Encuentra las parejas de delfines y vecinos acuáticos.</p>
+    </div>
+
+    <!-- Misión 2 -->
+    <div class="mision-card" onclick="abrirJuego('juego2')">
+      <span class="mision-num">Misión 2</span>
+      <div class="mision-ico">🚀</div>
+      <h3>Rompecabezas Multitema</h3>
+      <p>¡Elige entre el espacio, animales, ciencias o ricas frutas!</p>
+    </div>
+
+    <!-- Misión 3 -->
+    <div class="mision-card" onclick="abrirJuego('juego3')">
+      <span class="mision-num">Misión 3</span>
+      <div class="mision-ico">🦐</div>
+      <h3>El Laberinto de la Tonina</h3>
+      <p>¡Ayuda a la tonina negra a comer camarones sin que la asusten!</p>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR DE JUEGOS ACTIVOS -->
+  <main>
+    <!-- SECCIÓN JUEGO 1 -->
+    <section class="juego-pantalla" id="juego1">
+      <h2 class="juego-titulo">🐬 Misión 1: Memorice Marino</h2>
+      <div class="decoracion">🐡 🌿 🐳 🌿 🦑</div>
+      <div class="iframe-contenedor">
+        <iframe src="juego_toninas.html" title="Memorice Marino"></iframe>
+      </div>
+      <button class="btn-cerrar" onclick="cerrarJuego()">◀ Volver al Mapa</button>
+    </section>
+
+    <!-- SECCIÓN JUEGO 2 -->
+    <section class="juego-pantalla" id="juego2">
+      <h2 class="juego-titulo">🚀 Misión 2: Rompecabezas Multitema</h2>
+      <div class="decoracion">🚀 🪐 🔬 🧬 🍎</div>
+      <div class="iframe-contenedor">
+        <iframe src="juego_memoria.html" title="Juego de Memoria"></iframe>
+      </div>
+      <button class="btn-cerrar" onclick="cerrarJuego()">◀ Volver al Mapa</button>
+    </section>
+
+    <!-- SECCIÓN JUEGO 3 -->
+    <section class="juego-pantalla" id="juego3">
+      <h2 class="juego-titulo">🖤 Misión 3: El Laberinto de la Tonina</h2>
+      <div class="decoracion">🐢 🪸 🦈 🪸 🚢</div>
+      <div class="iframe-contenedor">
+        <iframe src="juego_laberinto.html" title="Laberinto de la Tonina Negra"></iframe>
+      </div>
+      <button class="btn-cerrar" onclick="cerrarJuego()">◀ Volver al Mapa</button>
+    </section>
+  </main>
+
+  <footer>
+    <p>Hecho con mucho 💙 para los pequeños exploradores del océano 🌴 🐚</p>
+  </footer>
+
+  <script>
+    // Sistema para abrir y cerrar misiones
+    function abrirJuego(id) {
+      // Ocultar mapa
+      document.getElementById('mapa-misiones').style.display = 'none';
+      // Desactivar todos los marcos
+      document.querySelectorAll('.juego-pantalla').forEach(pantalla => {
+        pantalla.classList.remove('active');
+      });
+      // Activar pantalla seleccionada
+      document.getElementById(id).classList.add('active');
+      // Scroll automático al tope del juego para fácil visualización
+      window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    function cerrarJuego() {
+      // Ocultar todos los marcos
+      document.querySelectorAll('.juego-pantalla').forEach(pantalla => {
+        pantalla.classList.remove('active');
+        // Recargar los iframes para que se reinicie el juego cuando salgan de él
+        const iframe = pantalla.querySelector('iframe');
+        if (iframe) iframe.src = iframe.src;
+      });
+      // Volver a mostrar mapa
+      document.getElementById('mapa-misiones').style.display = 'grid';
+    }
+
+    // Generador dinámico de burbujas divertidas
+    function crearBurbujas() {
+      const contenedor = document.getElementById('contenedor-burbujas');
+      const cantidad = 15;
+      
+      for (let i = 0; i < cantidad; i++) {
+        const burbuja = document.createElement('div');
+        burbuja.className = 'burbuja';
+        
+        const tamano = Math.random() * 35 + 10;
+        burbuja.style.width = `${tamano}px`;
+        burbuja.style.height = `${tamano}px`;
+        burbuja.style.left = `${Math.random() * 100}%`;
+        
+        burbuja.style.animationDuration = `${Math.random() * 6 + 5}s`;
+        burbuja.style.animationDelay = `${Math.random() * 5}s`;
+        
+        contenedor.appendChild(burbuja);
+      }
+    }
+    window.onload = crearBurbujas;
+  </script>
+</body>
+</html>
